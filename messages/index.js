@@ -31,6 +31,15 @@ const LuisModelUrl = 'https://' + luisAPIHostName + '/luis/v1/application?id=' +
 
 // Main dialog with LUIS
 var recognizer = new builder.LuisRecognizer(LuisModelUrl);
+recognizer.onEnabled(function(context, callback){
+  if (context.dialogStack().length >0){
+    // we are in a converstation
+      callback(null,false);
+  } else {
+      callback(null,true);
+  }
+});
+
 var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 /*
 .matches('<yourIntent>')... See details at http://docs.botframework.com/builder/node/guides/understanding-natural-language/
@@ -39,7 +48,20 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
     session.send('Sorry, I did not understand \'%s\'.', session.message.text);
 });
 
-bot.dialog('/', intents);
+//bot.dialog('/', intents);
+
+bot.on('conversationUpdate', function (message) {
+  if (message.membersAdded) {
+    message.membersAdded.forEach(function (identity) {
+      if (identity.id === message.address.bot.id) {
+            bot.send(new builder.Message()
+                .address(message.address)
+                .text("Hello!  I'm a bot for searching user on GitHub"));
+        }
+    });
+  }
+});
+
 
 bot.recognizer(recognizer);
 
