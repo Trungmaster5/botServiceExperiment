@@ -41,6 +41,8 @@ var intents = new builder.IntentDialog({ recognizers: [recognizer] })
 
 bot.dialog('/', intents);
 
+bot.recognizer(recognizer);
+
 bot.dialog('search',[
   function (session, args, next) {
       console.log(args);
@@ -106,7 +108,6 @@ bot.dialog('search',[
 ]).triggerAction({
   matches:'SearchPromp'
 });
-
 
 if (useEmulator) {
     var restify = require('restify');
