@@ -68,7 +68,8 @@ bot.recognizer(recognizer);
 bot.dialog('search',[
   function (session, args, next) {
       console.log(args);
-      const query= builder.EntityRecognizer.findEntity(args.intent.entities,'query');
+      //const query= builder.EntityRecognizer.findEntity(args.intent.entities,'query');
+      var query = args.intent.entities[0];
       if (!query) {
           // No matching entity
           builder.Prompts.text(session, 'Who did you want to search for?');
